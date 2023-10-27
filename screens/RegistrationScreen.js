@@ -1,6 +1,27 @@
 // RegistrationScreen.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
+import Toast from 'react-native-toast-message';
+
+export const showSuccessNotification = (message) => {
+  Toast.show({
+    type: 'success',
+    position: 'top',
+    text1: 'Успех',
+    text2: message,
+    visibilityTime: 3000,
+  });
+};
+
+export const showErrorNotification = (message) => {
+  Toast.show({
+    type: 'error',
+    position: 'top',
+    text1: 'Ошибка',
+    text2: message,
+    visibilityTime: 3000,
+  });
+};
 
 function RegistrationScreen() {
   const [username, setUsername] = useState('');
@@ -8,7 +29,6 @@ function RegistrationScreen() {
   const [password, setPassword] = useState('');
 
   const handleRegistration = async () => {
-    // Отправьте запрос на сервер для регистрации пользователя
     try {
       const response = await fetch('http://localhost:4444/register', {
         method: 'POST',
@@ -19,13 +39,14 @@ function RegistrationScreen() {
       });
 
       if (response.ok) {
-        // Регистрация прошла успешно
+        showSuccessNotification('Регистрация прошла успешно');
         console.log('User registered successfully');
       } else {
-        // Ошибка регистрации
+        showErrorNotification('Ошибка регистрации');
         console.log('Registration failed');
       }
     } catch (error) {
+      showErrorNotification('Ошибка сети');
       console.error('Error:', error);
     }
   };
