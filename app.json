@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6873fe3a-8454-40c3-b45c-bcc2b43eaa2b"
+      }
+    },
+    "owner": "mqpanda"
   }
 }
