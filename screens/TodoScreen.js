@@ -5,7 +5,6 @@ import TodoList from './TodoList';
 function TodoScreen({ navigation }) {
   return (
     <View>
-      <Text>Список задач (Todo)</Text>
       <TodoList />
       <Button
         title="Добавить задачу"
