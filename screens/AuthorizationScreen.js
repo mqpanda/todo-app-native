@@ -21,7 +21,7 @@ function AuthorizationScreen({ navigation }) {
         const token = data.token;
         await AsyncStorage.setItem('token', token);
         // Перейдите на другую страницу после успешной авторизации
-        navigation.navigate('TodoScreen');
+        navigation.navigate('Todo');
         console.log('Auth ok');
       } else {
         // Выведите сообщение об ошибке
@@ -30,6 +30,11 @@ function AuthorizationScreen({ navigation }) {
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleRegister = ({}) => {
+    // Перенаправление на экран регистрации
+    navigation.navigate('Registration');
   };
 
   return (
@@ -43,6 +48,7 @@ function AuthorizationScreen({ navigation }) {
         onChangeText={setPassword}
       />
       <Button title="Войти" onPress={handleLogin} />
+      <Button title="Зарегистрироваться" onPress={handleRegister} />
     </View>
   );
 }
