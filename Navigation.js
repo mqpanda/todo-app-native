@@ -1,10 +1,8 @@
-// Navigation.js
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AuthorizationScreen from './screens/AuthorizationScreen';
-import RegistrationScreen from './screens/RegistrationScreen';
-import TodoScreen from './screens/TodoScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import AuthorizationScreen from './screens/AuthorizationScreen'; // Импорт из папки screens
+import TodoScreen from './screens/TodoScreen'; // Импорт из папки screens
+import AddTaskScreen from './screens/AddTaskScreen'; // Импорт из папки screens
 
 const Stack = createStackNavigator();
 
@@ -13,8 +11,8 @@ function Navigation() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Авторизация">
         <Stack.Screen name="Авторизация" component={AuthorizationScreen} />
-        <Stack.Screen name="Регистрация" component={RegistrationScreen} />
         <Stack.Screen name="TodoScreen" component={TodoScreen} />
+        <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
