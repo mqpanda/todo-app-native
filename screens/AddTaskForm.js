@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function AddTaskForm() {
@@ -36,14 +36,16 @@ function AddTaskForm() {
   };
 
   return (
-    <View>
-      <Text>Добавить задачу</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Добавить задачу</Text>
       <TextInput
+        style={styles.input}
         placeholder="Название задачи"
         value={title}
         onChangeText={setTitle}
       />
       <TextInput
+        style={styles.input}
         placeholder="Описание задачи"
         value={description}
         onChangeText={setDescription}
@@ -52,5 +54,27 @@ function AddTaskForm() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 16,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10, // Закругленные края
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+});
 
 export default AddTaskForm;

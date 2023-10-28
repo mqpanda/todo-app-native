@@ -16,7 +16,7 @@ function Navigation() {
         <Stack.Screen name="Authorization" component={AuthorizationScreen} />
         <Stack.Screen name="Todo" component={TodoScreen} />
         <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
-        <Stack.Screen name="EditTaskScreen" component={EditTaskScreen} />
+        <Stack.Screen name="EditTask" component={EditTaskScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

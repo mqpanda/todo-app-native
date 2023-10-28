@@ -7,6 +7,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -16,12 +17,8 @@ function TodoList() {
   const [todos, setTodos] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
   const [token, setToken] = useState('');
-  const [editingTodo, setEditingTodo] = useState(null);
-  const [editedTitle, setEditedTitle] = useState('');
-  const [editedDescription, setEditedDescription] = useState('');
   const navigation = useNavigation();
 
-  // Функция для сохранения выполненных задач в AsyncStorage
   const saveCompletedTasksToStorage = async (completedTasks) => {
     try {
       await AsyncStorage.setItem(
@@ -36,7 +33,6 @@ function TodoList() {
     }
   };
 
-  // Функция для загрузки выполненных задач из AsyncStorage
   const loadCompletedTasksFromStorage = async () => {
     try {
       const completedTasksData = await AsyncStorage.getItem('completedTasks');
@@ -67,6 +63,11 @@ function TodoList() {
         if (response.ok) {
           const data = await response.json();
           setTodos(data);
+
+          const completedTasks = data
+            .filter((todo) => todo.completed)
+            .map((todo) => todo._id);
+          setCompletedTasks(completedTasks);
         } else {
           console.error('Ошибка при получении данных о ToDo');
         }
@@ -97,16 +98,6 @@ function TodoList() {
 
   const toggleCompletion = async (taskId) => {
     const isTaskCompleted = completedTasks.includes(taskId);
-    let updatedTasks = [...completedTasks];
-
-    if (isTaskCompleted) {
-      updatedTasks = updatedTasks.filter((id) => id !== taskId);
-    } else {
-      updatedTasks.push(taskId);
-    }
-
-    setCompletedTasks(updatedTasks);
-
     const updatedTodos = todos.map((todo) => {
       if (todo._id === taskId) {
         return {
@@ -120,61 +111,41 @@ function TodoList() {
     setTodos(updatedTodos);
 
     try {
-      await AsyncStorage.setItem(
-        'completedTasks',
-        JSON.stringify(updatedTasks)
-      );
-    } catch (error) {
-      console.error('Ошибка при сохранении выполненных задач:', error);
-    }
-  };
-
-  const editTodo = (todo) => {
-    setEditingTodo(todo);
-    setEditedTitle(todo.title);
-    setEditedDescription(todo.description);
-  };
-
-  const cancelEdit = () => {
-    setEditingTodo(null);
-    setEditedTitle('');
-    setEditedDescription('');
-  };
-
-  const updateTodo = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:4444/todos/${editingTodo._id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            title: editedTitle,
-            description: editedDescription,
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:4444/todos/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          completed: !isTaskCompleted,
+        }),
+      });
 
       if (response.ok) {
         loadTodos();
-        setEditingTodo(null);
-        setEditedTitle('');
-        setEditedDescription('');
       } else {
+        setTodos(todos);
         console.error('Ошибка при обновлении ToDo');
       }
     } catch (error) {
+      setTodos(todos);
       console.error('Ошибка:', error);
     }
   };
 
+  const editTodo = (todo) => {
+    navigation.navigate('EditTask', {
+      taskId: todo._id,
+      title: todo.title,
+      description: todo.description,
+    });
+  };
+
   useEffect(() => {
     loadTodos();
-    loadCompletedTasksFromStorage(); // Загрузка выполненных задач из AsyncStorage
-  }, []);
+    loadCompletedTasksFromStorage();
+  }, [navigation]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -183,93 +154,70 @@ function TodoList() {
     return unsubscribe;
   }, [navigation]);
 
-  return (
-    <View>
-      <FlatList
-        data={todos}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.todoItem}>
-            {editingTodo && editingTodo._id === item._id ? (
-              <View style={styles.editContainer}>
-                <TextInput
-                  placeholder="Название задачи"
-                  value={editedTitle}
-                  onChangeText={setEditedTitle}
-                  style={styles.editInput}
-                />
-                <TextInput
-                  placeholder="Описание задачи"
-                  value={editedDescription}
-                  onChangeText={setEditedDescription}
-                  style={styles.editInput}
-                />
-                <Button title="Сохранить" onPress={updateTodo} />
-                <Button title="Отмена" onPress={cancelEdit} />
-              </View>
-            ) : (
-              <View style={styles.todoTextContainer}>
-                <Text style={styles.todoTitle}>{item.title}</Text>
-                <Text style={styles.todoDescription}>{item.description}</Text>
-              </View>
-            )}
-            <View style={styles.actionButtons}>
-              <TouchableOpacity onPress={() => deleteTodo(item._id)}>
-                <MaterialIcons name="delete" size={24} color="red" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => editTodo(item)}>
-                <MaterialIcons name="edit" size={24} color="blue" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => toggleCompletion(item._id)}>
-                <MaterialIcons
-                  name={
-                    completedTasks.includes(item._id)
-                      ? 'check-box'
-                      : 'check-box-outline-blank'
-                  }
-                  size={24}
-                  color="green"
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
+  const TaskItem = ({ task }) => (
+    <View style={styles.taskContainer}>
+      <View>
+        <Text style={styles.taskTitle}>{task.title}</Text>
+        <Text style={styles.taskDescription}>{task.description}</Text>
+      </View>
+
+      <View style={styles.taskActions}>
+        <TouchableOpacity onPress={() => editTodo(task)}>
+          <MaterialIcons name="edit" size={24} color="gray" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => deleteTodo(task._id)}>
+          <MaterialIcons name="delete" size={24} color="gray" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => toggleCompletion(task._id)}>
+          <MaterialIcons
+            name={
+              completedTasks.includes(task._id)
+                ? 'check-box'
+                : 'check-box-outline-blank'
+            }
+            size={24}
+            color="green"
+          />
+        </TouchableOpacity>
+      </View>
     </View>
+  );
+
+  return (
+    <FlatList
+      data={todos}
+      keyExtractor={(item) => item._id}
+      renderItem={({ item }) => <TaskItem task={item} />}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  todoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  taskContainer: {
+    backgroundColor: 'white',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+    flexDirection: 'row', // Добавляем направление "row" для размещения кнопок в ряд
+    justifyContent: 'space-between', // Равномерное распределение между элементами
     alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
-  todoTextContainer: {
-    flex: 1,
-  },
-  todoTitle: {
-    fontSize: 18,
+  taskTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
   },
-  todoDescription: {
+  taskDescription: {
     fontSize: 16,
-    color: '#555',
+    color: 'gray',
   },
-  editContainer: {
-    flex: 1,
-  },
-  editInput: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  taskActions: {
+    flexDirection: 'row', // Размещаем кнопки в ряд
+    alignItems: 'center', // Выравнивание кнопок по центру
   },
 });
 
