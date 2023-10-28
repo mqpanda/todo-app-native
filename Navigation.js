@@ -1,22 +1,22 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import AuthorizationScreen from './screens/AuthorizationScreen'; // Импорт из папки screens
-import TodoScreen from './screens/TodoScreen'; // Импорт из папки screens
-import AddTaskScreen from './screens/AddTaskScreen'; // Импорт из папки screens
+import TodoScreen from './screens/TodoScreen';
+import AddTaskScreen from './screens/AddTaskScreen';
 import RegistrationScreen from './screens/RegistrationScreen';
 import EditTaskScreen from './screens/EditTaskScreen';
+import AuthorizationScreen from './screens/AuthorizationScreen';
 
 const Stack = createStackNavigator();
 
 function Navigation() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Authorization">
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
-        <Stack.Screen name="Authorization" component={AuthorizationScreen} />
+      <Stack.Navigator initialRouteName="Sign in">
+        <Stack.Screen name="Sign up" component={RegistrationScreen} />
+        <Stack.Screen name="Sign in" component={AuthorizationScreen} />
         <Stack.Screen name="Todo" component={TodoScreen} />
-        <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
-        <Stack.Screen name="EditTask" component={EditTaskScreen} />
+        <Stack.Screen name="Add todo" component={AddTaskScreen} />
+        <Stack.Screen name="Edit todo" component={EditTaskScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

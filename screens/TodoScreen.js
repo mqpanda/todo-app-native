@@ -7,10 +7,10 @@ function TodoScreen({ navigation }) {
     <View>
       <TodoList />
       <Button
-        title="Добавить задачу"
+        title="Add todo"
         onPress={() => {
           // Навигация на страницу добавления задачи (AddTaskScreen)
-          navigation.navigate('AddTaskScreen');
+          navigation.navigate('Add todo');
         }}
       />
     </View>

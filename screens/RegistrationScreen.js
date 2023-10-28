@@ -12,20 +12,20 @@ function RegistrationScreen() {
   const [error, setError] = useState(null);
 
   const handleRegistration = async () => {
-    setError(null); // Сброс ошибки перед отправкой запроса
+    setError(null);
 
     if (username.length < 3) {
-      setError('Имя пользователя должно содержать не менее 3 символов');
+      setError('Username must contain at least 3 characters');
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Пожалуйста, введите действительный адрес электронной почты');
+      setError('Please enter a valid email address');
       return;
     }
 
     if (password.length < 6) {
-      setError('Пароль должен содержать не менее 6 символов');
+      setError('The password must contain at least 6 characters');
       return;
     }
 
@@ -39,19 +39,18 @@ function RegistrationScreen() {
       });
 
       if (response.ok) {
-        showSuccessNotification('Регистрация прошла успешно');
+        showSuccessNotification('Registration completed successfully');
         console.log('User registered successfully');
       } else {
-        showErrorNotification('Ошибка регистрации');
+        showErrorNotification('Registration failed');
         console.log('Registration failed');
       }
     } catch (error) {
-      showErrorNotification('Ошибка сети');
+      showErrorNotification('Network error');
       console.error('Error:', error);
     }
   };
 
-  // Функция для проверки действительности адреса электронной почты
   const validateEmail = (email) => {
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailPattern.test(email);
@@ -59,11 +58,11 @@ function RegistrationScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Регистрация</Text>
+      <Text style={styles.title}>Sign up</Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TextInput
         style={styles.input}
-        placeholder="Имя пользователя"
+        placeholder="Username"
         value={username}
         onChangeText={setUsername}
       />
@@ -75,12 +74,12 @@ function RegistrationScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Пароль"
+        placeholder="Password"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Зарегистрироваться" onPress={handleRegistration} />
+      <Button title="Sign up" onPress={handleRegistration} />
     </View>
   );
 }

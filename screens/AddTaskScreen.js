@@ -23,7 +23,6 @@ function AddTaskScreen({ navigation }) {
         console.log('Task added successfully');
         setTitle('');
         setDescription('');
-        // Вернуться на предыдущий экран (TodoScreen) после успешного добавления задачи
         navigation.goBack();
       } else {
         console.log('Failed to add task');
@@ -35,20 +34,20 @@ function AddTaskScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Добавить задачу</Text>
+      <Text style={styles.title}>Add todo</Text>
       <TextInput
         style={styles.input}
-        placeholder="Название задачи"
+        placeholder="Todo title"
         value={title}
         onChangeText={setTitle}
       />
       <TextInput
         style={styles.input}
-        placeholder="Описание задачи"
+        placeholder="Todo description"
         value={description}
         onChangeText={setDescription}
       />
-      <Button title="Добавить" onPress={handleAddTask} />
+      <Button title="Add" onPress={handleAddTask} />
     </View>
   );
 }
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 10, // Закругленные края
+    borderRadius: 10,
     marginBottom: 12,
     paddingHorizontal: 8,
   },

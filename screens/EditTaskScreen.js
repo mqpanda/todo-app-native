@@ -10,7 +10,6 @@ function EditTaskScreen() {
   const route = useRoute();
 
   useEffect(() => {
-    // Получите данные о задаче, которую пользователь хочет отредактировать
     const { taskId, title, description } = route.params;
     setEditedTitle(title);
     setEditedDescription(description);
@@ -37,7 +36,6 @@ function EditTaskScreen() {
 
       if (response.ok) {
         console.log('Task updated successfully');
-        // После успешного обновления задачи вернитесь на экран с задачами (TodoList)
         navigation.goBack();
       } else {
         console.log('Failed to update task');
@@ -49,20 +47,20 @@ function EditTaskScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Редактировать задачу</Text>
+      <Text style={styles.title}>Edit todo</Text>
       <TextInput
         style={styles.input}
-        placeholder="Название задачи"
+        placeholder="Todo title"
         value={editedTitle}
         onChangeText={setEditedTitle}
       />
       <TextInput
         style={styles.input}
-        placeholder="Описание задачи"
+        placeholder="Todo description"
         value={editedDescription}
         onChangeText={setEditedDescription}
       />
-      <Button title="Сохранить" onPress={handleUpdateTask} />
+      <Button title="Save" onPress={handleUpdateTask} />
     </View>
   );
 }

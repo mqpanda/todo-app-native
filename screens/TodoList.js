@@ -3,11 +3,8 @@ import {
   View,
   Text,
   FlatList,
-  Button,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -19,20 +16,6 @@ function TodoList() {
   const [token, setToken] = useState('');
   const navigation = useNavigation();
 
-  const saveCompletedTasksToStorage = async (completedTasks) => {
-    try {
-      await AsyncStorage.setItem(
-        'completedTasks',
-        JSON.stringify(completedTasks)
-      );
-    } catch (error) {
-      console.error(
-        'Ошибка при сохранении выполненных задач в AsyncStorage:',
-        error
-      );
-    }
-  };
-
   const loadCompletedTasksFromStorage = async () => {
     try {
       const completedTasksData = await AsyncStorage.getItem('completedTasks');
@@ -41,10 +24,7 @@ function TodoList() {
         setCompletedTasks(completedTasks);
       }
     } catch (error) {
-      console.error(
-        'Ошибка при загрузке выполненных задач из AsyncStorage:',
-        error
-      );
+      console.error('Error loading completed tasks from AsyncStorage:', error);
     }
   };
 
@@ -69,10 +49,10 @@ function TodoList() {
             .map((todo) => todo._id);
           setCompletedTasks(completedTasks);
         } else {
-          console.error('Ошибка при получении данных о ToDo');
+          console.error('Error parse info ToDo');
         }
       } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('Error:', error);
       }
     }
   };
@@ -89,10 +69,10 @@ function TodoList() {
       if (response.ok) {
         loadTodos();
       } else {
-        console.error('Ошибка при удалении ToDo');
+        console.error('Error deleting ToDo');
       }
     } catch (error) {
-      console.error('Ошибка:', error);
+      console.error('Error:', error);
     }
   };
 
@@ -126,16 +106,16 @@ function TodoList() {
         loadTodos();
       } else {
         setTodos(todos);
-        console.error('Ошибка при обновлении ToDo');
+        console.error('Error updating ToDo');
       }
     } catch (error) {
       setTodos(todos);
-      console.error('Ошибка:', error);
+      console.error('Error:', error);
     }
   };
 
   const editTodo = (todo) => {
-    navigation.navigate('EditTask', {
+    navigation.navigate('Edit todo', {
       taskId: todo._id,
       title: todo.title,
       description: todo.description,
@@ -203,8 +183,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 5,
-    flexDirection: 'row', // Добавляем направление "row" для размещения кнопок в ряд
-    justifyContent: 'space-between', // Равномерное распределение между элементами
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   taskTitle: {
@@ -216,8 +196,8 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   taskActions: {
-    flexDirection: 'row', // Размещаем кнопки в ряд
-    alignItems: 'center', // Выравнивание кнопок по центру
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 

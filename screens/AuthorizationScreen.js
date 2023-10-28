@@ -8,11 +8,10 @@ function AuthorizationScreen({ navigation }) {
   const [error, setError] = useState(null);
 
   const handleLogin = async () => {
-    // Сброс ошибки перед отправкой запроса
     setError(null);
 
     if (!email || !password) {
-      setError('Заполните все поля');
+      setError('Fill in all the fields');
       return;
     }
 
@@ -29,26 +28,25 @@ function AuthorizationScreen({ navigation }) {
         const data = await response.json();
         const token = data.token;
         await AsyncStorage.setItem('token', token);
-        // Перейдите на другую страницу после успешной авторизации
+
         navigation.navigate('Todo');
         console.log('Auth ok');
       } else {
-        setError('Неправильный email или пароль');
+        setError('Incorrect email or password');
       }
     } catch (error) {
       console.error('Error:', error);
-      setError('Что-то пошло не так');
+      setError('Something went wrong');
     }
   };
 
   const handleRegister = () => {
-    // Перенаправление на экран регистрации
-    navigation.navigate('Registration');
+    navigation.navigate('Sign up');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Авторизация</Text>
+      <Text style={styles.title}>Sign in</Text>
       {error && <Text style={styles.errorText}>{error}</Text>}
       <TextInput
         style={styles.input}
@@ -58,13 +56,13 @@ function AuthorizationScreen({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Пароль"
+        placeholder="Password"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Войти" onPress={handleLogin} />
-      <Button title="Зарегистрироваться" onPress={handleRegister} />
+      <Button title="Sign in" onPress={handleLogin} />
+      <Button title="Sign up" onPress={handleRegister} />
     </View>
   );
 }
