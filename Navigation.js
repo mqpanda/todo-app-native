@@ -4,6 +4,7 @@ import AuthorizationScreen from './screens/AuthorizationScreen'; // Импорт
 import TodoScreen from './screens/TodoScreen'; // Импорт из папки screens
 import AddTaskScreen from './screens/AddTaskScreen'; // Импорт из папки screens
 import RegistrationScreen from './screens/RegistrationScreen';
+import EditTaskScreen from './screens/EditTaskScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ function Navigation() {
         <Stack.Screen name="Authorization" component={AuthorizationScreen} />
         <Stack.Screen name="Todo" component={TodoScreen} />
         <Stack.Screen name="AddTaskScreen" component={AddTaskScreen} />
+        <Stack.Screen name="EditTaskScreen" component={EditTaskScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
