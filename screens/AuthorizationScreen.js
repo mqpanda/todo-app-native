@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function AuthorizationScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -17,11 +18,10 @@ function AuthorizationScreen({ navigation }) {
 
       if (response.ok) {
         const data = await response.json();
-        // Сохраните токен и информацию о пользователе, полученные из ответа, в состоянии или хранилище
-        // Пример: AsyncStorage или Context API
-
+        const token = data.token;
+        await AsyncStorage.setItem('token', token);
         // Перейдите на другую страницу после успешной авторизации
-        // navigation.navigate('RegistrationScreen');
+        navigation.navigate('TodoScreen');
         console.log('Auth ok');
       } else {
         // Выведите сообщение об ошибке
